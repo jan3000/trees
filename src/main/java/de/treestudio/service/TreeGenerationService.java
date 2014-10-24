@@ -2,10 +2,10 @@ package de.treestudio.service;
 
 import com.google.common.collect.Lists;
 import de.treestudio.domain.Branch;
-import de.treestudio.domain.Line;
+import javafx.scene.shape.Line;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TreeGenerationService {
 
@@ -17,19 +17,44 @@ public class TreeGenerationService {
     private static final int MAX_SPREADING_RIGHT = 20;
 
 
+    private static final int MAX_BRANCH_LENGTH = 300;
+    public static final int TRUNK_X = 400;
+    public static final int TRUNK_HEIGHT_START = 590;
+    public static final int TRUNK_HEIGHT_END = 10;
+    public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = 30;
+
+
+    private int getBranchDirection() {
+        if ((new Random()).nextBoolean()) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
     public Branch generateBranch() {
+
         Branch branch = new Branch();
 
         List<Line> branchLines = Lists.newArrayList();
+        branchLines.add(new Line(TRUNK_X, TRUNK_HEIGHT_START, TRUNK_X, TRUNK_HEIGHT_END));
 
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 490));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 80));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 210));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 330));
 
-
-//        Line line = new Line();
-//        branchLines.add(line);
 
         branch.setBranchLines(branchLines);
 
         return branch;
+    }
+
+    private int generateBranchStartHeight() {
+        return TRUNK_HEIGHT_START - TRUNK_HEIGHT_WITHOUT_BRANCHES - new Random().nextInt(TRUNK_HEIGHT_WITHOUT_BRANCHES );
+    }
+
+    private int generateBranchLength() {
+        return TRUNK_X + getBranchDirection() * new Random().nextInt(MAX_BRANCH_LENGTH);
     }
 
 

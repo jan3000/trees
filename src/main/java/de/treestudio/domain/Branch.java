@@ -1,6 +1,7 @@
 package de.treestudio.domain;
 
 import com.google.common.collect.Lists;
+import javafx.scene.shape.Line;
 
 import java.util.List;
 
