@@ -3,10 +3,12 @@ package de.treestudio.service;
 import com.google.common.collect.Lists;
 import de.treestudio.domain.Branch;
 import javafx.scene.shape.Line;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
+@Service
 public class TreeGenerationService {
 
     private static final int MIN_LENGTH_OF_BRANCH_PART = 10;
@@ -21,7 +23,9 @@ public class TreeGenerationService {
     public static final int TRUNK_X = 400;
     public static final int TRUNK_HEIGHT_START = 590;
     public static final int TRUNK_HEIGHT_END = 10;
-    public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = 30;
+    public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = -300;
+    public static final int MAX_BRANCH_HEIGHT_INCREASE = 100;
+    private int branchStartHeight;
 
 
     private int getBranchDirection() {
@@ -38,10 +42,10 @@ public class TreeGenerationService {
         List<Line> branchLines = Lists.newArrayList();
         branchLines.add(new Line(TRUNK_X, TRUNK_HEIGHT_START, TRUNK_X, TRUNK_HEIGHT_END));
 
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 490));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 80));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 210));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), 330));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
+        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
 
 
         branch.setBranchLines(branchLines);
@@ -49,8 +53,13 @@ public class TreeGenerationService {
         return branch;
     }
 
+    private int getBranchEndHeight() {
+        return branchStartHeight - new Random().nextInt(MAX_BRANCH_HEIGHT_INCREASE);
+    }
+
     private int generateBranchStartHeight() {
-        return TRUNK_HEIGHT_START - TRUNK_HEIGHT_WITHOUT_BRANCHES - new Random().nextInt(TRUNK_HEIGHT_WITHOUT_BRANCHES );
+        branchStartHeight = TRUNK_HEIGHT_START - new Random().nextInt(TRUNK_HEIGHT_START - TRUNK_HEIGHT_WITHOUT_BRANCHES);
+        return branchStartHeight;
     }
 
     private int generateBranchLength() {

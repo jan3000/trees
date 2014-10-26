@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -22,14 +23,12 @@ import java.util.List;
 
 public class Main extends Application {
 
+    @Autowired
+    private TreeGenerationService treeGenerationService;
 
     @Override
     public void start(Stage stage) throws Exception {
-
-        final TreeGenerationService treeGenerationService = new TreeGenerationService();
-        final Path path = drawPath();
         final Pane pane = new Pane();
-        pane.getChildren().add(path);
         addBranchesToPane(treeGenerationService, pane);
         Button button = new Button("Nochmal");
         button.setOnAction(new EventHandler<javafx.event.ActionEvent>() {
@@ -66,50 +65,6 @@ public class Main extends Application {
                 iterator.remove();
             }
         }
-    }
-
-
-    private Path drawPath() {
-        Path path = new Path();
-
-        MoveTo moveTo = new MoveTo();
-        moveTo.setX(10.0f);
-        moveTo.setY(10.0f);
-
-        HLineTo hLineTo = new HLineTo();
-        hLineTo.setX(70.0f);
-
-//        QuadCurveTo quadCurveTo = new QuadCurveTo();
-//        quadCurveTo.setX(120.0f);
-//        quadCurveTo.setY(60.0f);
-//        quadCurveTo.setControlX(100.0f);
-//        quadCurveTo.setControlY(0.0f);
-//
-//        LineTo lineTo = new LineTo();
-//        lineTo.setX(175.0f);
-//        lineTo.setY(55.0f);
-//
-//        ArcTo arcTo = new ArcTo();
-//        arcTo.setX(50.0f);
-//        arcTo.setY(50.0f);
-//        arcTo.setRadiusX(50.0f);
-//        arcTo.setRadiusY(50.0f);
-
-        path.getElements().add(moveTo);
-        path.getElements().add(hLineTo);
-        MoveTo moveTo2 = new MoveTo();
-        moveTo2.setX(10.0f);
-        moveTo2.setY(20.0f);
-
-        path.getElements().add(moveTo2);
-        path.getElements().add(hLineTo);
-        path.getElements().add(moveTo);
-        path.getElements().add(hLineTo);
-//        path.getElements().add(quadCurveTo);
-//        path.getElements().add(lineTo);
-//        path.getElements().add(arcTo);
-
-        return path;
     }
 
     public static void main(String[] args) {
