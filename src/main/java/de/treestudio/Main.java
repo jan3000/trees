@@ -23,8 +23,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    @Autowired
-    private TreeGenerationService treeGenerationService;
+    private TreeGenerationService treeGenerationService = new TreeGenerationService();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -43,13 +42,22 @@ public class Main extends Application {
         vBox.getChildren().add(pane);
         vBox.getChildren().add(button);
 
+        Scene scene = initScene(vBox);
+        initStage(stage, scene);
+        stage.show();
+    }
+
+    private Scene initScene(VBox vBox) {
         Scene scene = new Scene(vBox, 800, 600);
         scene.widthProperty();
+        return scene;
+    }
+
+    private void initStage(Stage stage, Scene scene) {
         stage.setScene(scene);
         stage.setTitle("magic trees 1.0");
         stage.setMinHeight(800);
         stage.setMinWidth(600);
-        stage.show();
     }
 
     private void addBranchesToPane(TreeGenerationService treeGenerationService, Pane pane) {

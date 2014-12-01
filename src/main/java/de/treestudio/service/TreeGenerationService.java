@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
 
-@Service
 public class TreeGenerationService {
 
     private static final int MIN_LENGTH_OF_BRANCH_PART = 10;
@@ -25,31 +24,22 @@ public class TreeGenerationService {
     public static final int TRUNK_HEIGHT_END = 10;
     public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = -300;
     public static final int MAX_BRANCH_HEIGHT_INCREASE = 100;
+    public static final int NUMBER_OF_BRANCHES = 15;
     private int branchStartHeight;
 
 
     private int getBranchDirection() {
-        if ((new Random()).nextBoolean()) {
-            return 1;
-        } else {
-            return -1;
-        }
+        return new Random().nextBoolean() ? 1 : -1;
     }
     public Branch generateBranch() {
-
         Branch branch = new Branch();
-
         List<Line> branchLines = Lists.newArrayList();
         branchLines.add(new Line(TRUNK_X, TRUNK_HEIGHT_START, TRUNK_X, TRUNK_HEIGHT_END));
 
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
-        branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
-
-
+        for (int i = 1; i < NUMBER_OF_BRANCHES; i++) {
+            branchLines.add(new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight()));
+        }
         branch.setBranchLines(branchLines);
-
         return branch;
     }
 
