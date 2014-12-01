@@ -9,14 +9,14 @@ public class Tree {
     private Branch trunk = new Branch();
     private List<Branch> branches = Lists.newArrayList();
 
+    public Tree() {
+        this.trunk.setLayer(0);
+    }
 
     public Branch getTrunk() {
         return trunk;
     }
 
-    public void setTrunk(Branch trunk) {
-        this.trunk = trunk;
-    }
 
     public List<Branch> getBranches() {
         return branches;

@@ -1,25 +1,19 @@
 package de.treestudio;
 
 import de.treestudio.domain.*;
-import de.treestudio.domain.Line;
 import de.treestudio.service.TreeGenerationService;
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.event.ActionEvent;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -61,13 +55,20 @@ public class Main extends Application {
     }
 
     private void addBranchesToPane(TreeGenerationService treeGenerationService, Pane pane) {
-        Branch branch = treeGenerationService.generateBranch();
-        pane.getChildren().addAll(branch.getBranchLines());
+        Tree tree = treeGenerationService.generateTree();
+        pane.getChildren().addAll(tree.getTrunk().getBranchLines());
+        for (Branch branch : tree.getBranches()) {
+            pane.getChildren().addAll(branch.getBranchLines());
+
+
+
+        }
+
     }
 
     private void removeBranchesFromPane(Pane pane) {
         Iterator<Node> iterator = pane.getChildren().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Node node = iterator.next();
             if (node instanceof javafx.scene.shape.Line) {
                 iterator.remove();
