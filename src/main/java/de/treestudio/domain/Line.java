@@ -15,7 +15,7 @@ public class Line {
         this.yEnd = yEnd;
     }
 
-    public int getxStart() {
+    public int getXStart() {
         return xStart;
     }
 
@@ -23,7 +23,7 @@ public class Line {
         this.xStart = xStart;
     }
 
-    public int getyStart() {
+    public int getYStart() {
         return yStart;
     }
 
@@ -31,7 +31,7 @@ public class Line {
         this.yStart = yStart;
     }
 
-    public int getxEnd() {
+    public int getXEnd() {
         return xEnd;
     }
 
@@ -39,7 +39,7 @@ public class Line {
         this.xEnd = xEnd;
     }
 
-    public int getyEnd() {
+    public int getYEnd() {
         return yEnd;
     }
 
