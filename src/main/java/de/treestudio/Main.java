@@ -4,12 +4,21 @@ import de.treestudio.domain.*;
 import de.treestudio.service.TreeGenerationService;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
@@ -17,8 +26,9 @@ import java.util.Iterator;
 public class Main extends Application {
 
     public static final int WIDTH = 600;
-    public static final int HEIGHT = TreeGenerationService.MAX_BRANCH_HEIGHT_END + 50;
+    public static final int HEIGHT = 800;
     private TreeGenerationService treeGenerationService = new TreeGenerationService();
+    public static final int PANE_HEIGTH = HEIGHT - 100;
 
     public static void main(String[] args) {
         launch(args);
@@ -26,9 +36,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        Scene scene = initScene();
+        initStage(stage, scene);
+        stage.show();
+    }
+
+    private Scene initScene() {
         final Pane pane = new Pane();
+        pane.setMinHeight(PANE_HEIGTH);
         addBranchesToPane(treeGenerationService, pane);
+
+
         Button button = new Button("Again please");
+        button.setAlignment(Pos.CENTER);
         button.setOnAction(new EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent actionEvent) {
@@ -37,17 +58,39 @@ public class Main extends Application {
             }
         });
 
+        BorderPane borderPane = new BorderPane();
+        borderPane.setMinSize(PANE_HEIGTH, PANE_HEIGTH);
+        borderPane.setCenter(pane);
+
         VBox vBox = new VBox();
-        vBox.getChildren().add(pane);
+        vBox.setStyle("-fx-background-color: lightblue");
         vBox.getChildren().add(button);
+        vBox.setMinHeight(50);
 
-        Scene scene = initScene(vBox);
-        initStage(stage, scene);
-        stage.show();
-    }
+        vBox.setAlignment(Pos.CENTER);
+        borderPane.setBottom(vBox);
 
-    private Scene initScene(VBox vBox) {
-        Scene scene = new Scene(vBox, 1000, 1000);
+        Text headerText = new Text("Trees");
+        headerText.setFontSmoothingType(FontSmoothingType.GRAY);
+        headerText.setFont(Font.font("Monospaced", 18));
+        VBox headerVBox = new VBox();
+        headerVBox.setStyle("-fx-background-color: lightblue");
+        headerVBox.setMinHeight(50);
+        headerVBox.setAlignment(Pos.CENTER);
+        headerVBox.getChildren().add(headerText);
+        borderPane.setTop(headerVBox);
+
+        VBox leftBox = new VBox();
+        leftBox.setMinWidth(50);
+        leftBox.setStyle("-fx-background-color: lightblue");
+        borderPane.setLeft(leftBox);
+
+
+        VBox rightBox = new VBox();
+        rightBox.setMinWidth(50);
+        rightBox.setStyle("-fx-background-color: lightblue");
+        borderPane.setRight(rightBox);
+        Scene scene = new Scene(borderPane, HEIGHT, HEIGHT, Color.WHITESMOKE);
         scene.widthProperty();
         return scene;
     }
@@ -60,8 +103,8 @@ public class Main extends Application {
     }
 
     private Line drawLine(de.treestudio.domain.Line line) {
-        return new Line(line.getXStart(), TreeGenerationService.TRUNK_HEIGHT_END - line.getYStart(), line.getXEnd(),
-                TreeGenerationService.TRUNK_HEIGHT_END - line.getYEnd());
+        return new Line(line.getXStart(), PANE_HEIGTH - line.getYStart(), line.getXEnd(),
+                PANE_HEIGTH - line.getYEnd());
     }
 
     private void addBranchesToPane(TreeGenerationService treeGenerationService, Pane pane) {
