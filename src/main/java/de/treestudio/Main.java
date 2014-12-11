@@ -2,6 +2,7 @@ package de.treestudio;
 
 import de.treestudio.domain.*;
 import de.treestudio.service.TreeGenerationService;
+import de.treestudio.service.TreeGenerationService2;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -27,7 +28,7 @@ public class Main extends Application {
 
     public static final int WIDTH = 600;
     public static final int HEIGHT = 800;
-    private TreeGenerationService treeGenerationService = new TreeGenerationService();
+    private TreeGenerationService2 treeGenerationService = new TreeGenerationService2();
     public static final int PANE_HEIGTH = HEIGHT - 100;
 
     public static void main(String[] args) {
@@ -107,12 +108,13 @@ public class Main extends Application {
                 PANE_HEIGTH - line.getYEnd());
     }
 
-    private void addBranchesToPane(TreeGenerationService treeGenerationService, Pane pane) {
+    private void addBranchesToPane(TreeGenerationService2 treeGenerationService, Pane pane) {
         Tree tree = treeGenerationService.generateTree();
         pane.getChildren().add(drawLine(tree.getTrunk().getTrunkLine()));
         for (Branch branch : tree.getTrunk().getBranches()) {
             for (de.treestudio.domain.Line line : branch.getBranchLines()) {
                 pane.getChildren().add(drawLine(line));
+                pane.getChildren().add(drawLine(branch.getBranches().get(0).getBranchLines().get(0)));
             }
         }
     }

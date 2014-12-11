@@ -2,48 +2,48 @@ package de.treestudio.domain;
 
 public class Line {
 
-    private int xStart;
-    private int yStart;
-    private int xEnd;
-    private int yEnd;
+    private double xStart;
+    private double yStart;
+    private double xEnd;
+    private double yEnd;
 
 
-    public Line(int xStart, int yStart, int xEnd, int yEnd) {
+    public Line(double xStart, double yStart, double xEnd, double yEnd) {
         this.xStart = xStart;
         this.yStart = yStart;
         this.xEnd = xEnd;
         this.yEnd = yEnd;
     }
 
-    public int getXStart() {
+    public double getXStart() {
         return xStart;
     }
 
-    public void setxStart(int xStart) {
+    public void setxStart(double xStart) {
         this.xStart = xStart;
     }
 
-    public int getYStart() {
+    public double getYStart() {
         return yStart;
     }
 
-    public void setyStart(int yStart) {
+    public void setyStart(double yStart) {
         this.yStart = yStart;
     }
 
-    public int getXEnd() {
+    public double getXEnd() {
         return xEnd;
     }
 
-    public void setxEnd(int xEnd) {
+    public void setxEnd(double xEnd) {
         this.xEnd = xEnd;
     }
 
-    public int getYEnd() {
+    public double getYEnd() {
         return yEnd;
     }
 
-    public void setyEnd(int yEnd) {
+    public void setyEnd(double yEnd) {
         this.yEnd = yEnd;
     }
 

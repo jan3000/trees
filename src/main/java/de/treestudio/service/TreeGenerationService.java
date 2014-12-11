@@ -5,7 +5,7 @@ import de.treestudio.domain.Line;
 import de.treestudio.domain.Tree;
 import java.util.Random;
 
-public class TreeGenerationService {
+public class TreeGenerationService implements TreeGenerator {
 
     private static final int MAX_BRANCH_LENGTH = 300;
     public static final int TRUNK_X = 400;
