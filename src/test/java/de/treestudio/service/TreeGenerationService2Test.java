@@ -21,14 +21,6 @@ public class TreeGenerationService2Test {
     }
 
     @Test
-    public void generatePartialTreeJustTrunk() {
-        PartialTree partialTree = treeGenerationService2.generatePartialTree(1);
-        assertThat(partialTree).isNotNull();
-        assertTrunk(partialTree);
-        assertThat(partialTree.getBranches()).isEmpty();
-    }
-
-    @Test
     public void generateTree() {
         for (int i = 0; i < 10000; i++  ) {
             Tree tree = treeGenerationService2.generateTree();
@@ -48,6 +40,26 @@ public class TreeGenerationService2Test {
             assertThat(branchLine.getXEnd()).isGreaterThan(branchLine.getXStart());
             assertThat(branchLine.getYEnd()).isGreaterThan(branchLine.getYStart());
         }
+    }
+
+    @Test
+    public void generateTreeWith2Layers() {
+        Tree tree = treeGenerationService2.generateTree();
+        assertThat(tree).isNotNull();
+        assertLine(tree.getTrunk().getTrunkLine(), TreeGenerationService2.TRUNK_X, TreeGenerationService2.TRUNK_X,
+                TreeGenerationService2.TRUNK_HEIGHT_START, TreeGenerationService2.TRUNK_HEIGHT_END);
+
+        assertThat(tree.getTrunk().getBranches()).isNotEmpty();
+        assertThat(tree.getTrunk().getBranches().get(0)).isNotNull();
+
+        Line branchLine = tree.getTrunk().getBranches().get(0).getBranchLines().get(0);
+        assertThat(branchLine.getXStart()).isEqualTo(TreeGenerationService2.TRUNK_X);
+        assertThat(branchLine.getYStart()).isGreaterThan(0);
+        assertThat(branchLine.getYStart()).isLessThan(TreeGenerationService2.TRUNK_HEIGHT_END);
+
+        assertThat(branchLine.getXEnd()).isNotEqualTo(TreeGenerationService2.TRUNK_X);
+        assertThat(branchLine.getXEnd()).isGreaterThan(branchLine.getXStart());
+        assertThat(branchLine.getYEnd()).isGreaterThan(branchLine.getYStart());
     }
 
     @Test
@@ -81,7 +93,8 @@ public class TreeGenerationService2Test {
 
     @Test
     public void getPointsOfNewBranchForSimpleTrunk() {
-        Pair<Point, Point> pointsOfNewBranch = treeGenerationService2.getPointsOfNewBranch(new Point(10, 0), new Point(10, 10));
+        Pair<Point, Point> pointsOfNewBranch = treeGenerationService2.getPointsOfNewBranch(new Point(10, 0), new
+                Point(10, 10), TreeGenerationService2.MAX_BRANCH_LENGTH);
         Point startPoint = pointsOfNewBranch.getKey();
         assertThat(startPoint.getX()).isEqualTo(10);
         assertThat(startPoint.getY()).isGreaterThan(0);
@@ -96,7 +109,21 @@ public class TreeGenerationService2Test {
     @Test
     public void getPointsOfNewBranchForSimpleBranch() {
         Pair<Point, Point> pointsOfNewBranch = treeGenerationService2.getPointsOfNewBranch(new Point(10, 5), new
-                Point(15, 7));
+                Point(15, 7), TreeGenerationService2.MAX_BRANCH_LENGTH);
+        Point startPoint = pointsOfNewBranch.getKey();
+        org.assertj.core.api.Assertions.assertThat(startPoint.getX()).isBetween(Double.valueOf(10), Double.valueOf(15));
+        org.assertj.core.api.Assertions.assertThat(startPoint.getY()).isBetween(Double.valueOf(5), Double.valueOf(7));
+
+        // and point is on parent line
+        Point endPoint = pointsOfNewBranch.getValue();
+        assertThat(endPoint.getX()).isGreaterThan(startPoint.getX());
+        assertThat(endPoint.getY()).isGreaterThan(startPoint.getY());
+    }
+
+    @Test
+    public void getPointsOfNewBranchForSimpleBranchWithDistanceFromTrunk() {
+        Pair<Point, Point> pointsOfNewBranch = treeGenerationService2.getPointsOfNewBranch(new Point(10, 5), new
+                Point(15, 7), TreeGenerationService2.MAX_BRANCH_LENGTH);
         Point startPoint = pointsOfNewBranch.getKey();
         org.assertj.core.api.Assertions.assertThat(startPoint.getX()).isBetween(Double.valueOf(10), Double.valueOf(15));
         org.assertj.core.api.Assertions.assertThat(startPoint.getY()).isBetween(Double.valueOf(5), Double.valueOf(7));

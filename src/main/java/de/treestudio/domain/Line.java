@@ -47,6 +47,13 @@ public class Line {
         this.yEnd = yEnd;
     }
 
+    public double getLength() {
+        double xDistance = xEnd - xStart;
+        double yDistance = yEnd - yStart;
+        System.out.println("length = " + Math.sqrt(xDistance * xDistance + yDistance * yDistance));
+        return Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Line{");

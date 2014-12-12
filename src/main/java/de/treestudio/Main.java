@@ -48,7 +48,6 @@ public class Main extends Application {
         pane.setMinHeight(PANE_HEIGTH);
         addBranchesToPane(treeGenerationService, pane);
 
-
         Button button = new Button("Again please");
         button.setAlignment(Pos.CENTER);
         button.setOnAction(new EventHandler<javafx.event.ActionEvent>() {
