@@ -7,6 +7,12 @@ public class Line {
     private double xEnd;
     private double yEnd;
 
+    public Line(Point start, Point end) {
+        this.xStart = start.getX();
+        this.yStart = start.getY();
+        this.xEnd = end.getX();
+        this.yEnd = end.getY();
+    }
 
     public Line(double xStart, double yStart, double xEnd, double yEnd) {
         this.xStart = xStart;

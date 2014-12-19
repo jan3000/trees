@@ -9,6 +9,7 @@ public class Branch {
     private List<Line> branchLines = Lists.newArrayList();
     private List<Branch> branches = Lists.newArrayList();
     private Branch root;
+    private double angleToParentBranch;
     private int numberOfBranchPoints;
     private int layer;
 
@@ -44,12 +45,21 @@ public class Branch {
         this.layer = layer;
     }
 
-    public List<Line> getBranchLines() {
+    public List<Line> getBranchSegments() {
         return branchLines;
     }
 
-    public void setBranchLines(List<Line> branchLines) {
+    public void setBranchSegments(List<Line> branchLines) {
         this.branchLines = branchLines;
+    }
+
+
+    public double getAngleToParentBranch() {
+        return angleToParentBranch;
+    }
+
+    public void setAngleToParentBranch(double angleToParentBranch) {
+        this.angleToParentBranch = angleToParentBranch;
     }
 
     @Override
@@ -58,6 +68,7 @@ public class Branch {
         sb.append("branchLines=").append(branchLines);
         sb.append(", branches=").append(branches);
         sb.append(", root=").append(root);
+        sb.append(", angleToParentBranch=").append(angleToParentBranch);
         sb.append(", numberOfBranchPoints=").append(numberOfBranchPoints);
         sb.append(", layer=").append(layer);
         sb.append('}');

@@ -1,7 +1,6 @@
 package de.treestudio;
 
 import de.treestudio.domain.*;
-import de.treestudio.service.TreeGenerationService;
 import de.treestudio.service.TreeGenerationService2;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -11,15 +10,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
@@ -111,9 +107,9 @@ public class Main extends Application {
         Tree tree = treeGenerationService.generateTree();
         pane.getChildren().add(drawLine(tree.getTrunk().getTrunkLine()));
         for (Branch branch : tree.getTrunk().getBranches()) {
-            for (de.treestudio.domain.Line line : branch.getBranchLines()) {
+            for (de.treestudio.domain.Line line : branch.getBranchSegments()) {
                 pane.getChildren().add(drawLine(line));
-                pane.getChildren().add(drawLine(branch.getBranches().get(0).getBranchLines().get(0)));
+                pane.getChildren().add(drawLine(branch.getBranches().get(0).getBranchSegments().get(0)));
             }
         }
     }

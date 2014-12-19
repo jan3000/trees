@@ -32,7 +32,7 @@ public class TreeGenerationService implements TreeGenerator {
             Line line = new Line(TRUNK_X, generateBranchStartHeight(), generateBranchLength(), getBranchEndHeight());
             System.out.println(line);
             System.out.println("____________________________");
-            branch.getBranchLines().add(line);
+            branch.getBranchSegments().add(line);
             tree.getTrunk().getBranches().add(branch);
         }
         return tree;

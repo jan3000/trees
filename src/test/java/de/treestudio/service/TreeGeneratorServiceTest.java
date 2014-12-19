@@ -27,7 +27,7 @@ public class TreeGeneratorServiceTest {
         assertThat(tree.getTrunk().getBranches().size()).isEqualTo(TreeGenerationService.NUMBER_OF_BRANCHES);
         for (Branch branch : tree.getTrunk().getBranches()) {
             assertThat(branch.getLayer()).isEqualTo(1);
-            List<Line> branchLines = branch.getBranchLines();
+            List<Line> branchLines = branch.getBranchSegments();
             assertThat(branchLines.size() > 0).isTrue();
             for (Line branchLine : branchLines) {
                 assertThat(branchLine.getXStart() == TreeGenerationService.TRUNK_X).isTrue();
