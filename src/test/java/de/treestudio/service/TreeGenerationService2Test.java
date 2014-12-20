@@ -77,25 +77,25 @@ public class TreeGenerationService2Test {
 
     @Test
     public void getEndPointOfBranchAngle0() {
-        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 0);
+        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 0, true);
         assertThat(endPointOfBranch).isEqualTo(new Point(0, 2));
     }
     @Test
     public void getEndPointOfBranchAngle45() {
-        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 45);
+        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 45, true);
         assertEquals(1.414, endPointOfBranch.getX(), 0.001);
         assertEquals(1.414, endPointOfBranch.getY(), 0.001);
     }
     @Test
     public void getEndPointOfBranchAngle90() {
-        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 90);
-        assertEquals(2, endPointOfBranch.getX());
+        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(2, 90, true);
+        assertEquals(2, endPointOfBranch.getX(), 0.000001);
         assertEquals(0, endPointOfBranch.getY(), 0.001);
     }
     @Test
     public void getEndPointOfBranchAngle30() {
-        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(4, 30);
-        assertEquals(2, endPointOfBranch.getX());
+        Point endPointOfBranch = treeGenerationService2.getEndPointOfBranch(4, 30, true);
+        assertEquals(2, endPointOfBranch.getX(), 0.000001);
         assertEquals(0, endPointOfBranch.getY(), 0.001);
     }
 
@@ -138,7 +138,7 @@ public class TreeGenerationService2Test {
             assertThat(parentBranchLine.getLength()).isGreaterThan(childBranchLine.getLength() * (1 + MIN_ALPHA));
 
             // check alpha
-            double sinAlpha = Math.sin(Math.toRadians(35));
+            double sinAlpha = Math.sin(Math.toRadians(60));
             assertThat(childBranchLine.getLength() / parentBranchLine.getLength()).isLessThanOrEqualTo(sinAlpha);
         }
     }

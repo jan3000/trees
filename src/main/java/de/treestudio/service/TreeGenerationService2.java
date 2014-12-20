@@ -13,60 +13,99 @@ import java.util.Random;
 
 public class TreeGenerationService2 implements TreeGenerator {
 
-    public static final int MAX_BRANCH_LENGTH = 300;
+    public static final int MAX_BRANCH_LENGTH = 200;
     public static final int TRUNK_X = 400;
     public static final int TRUNK_HEIGHT_START = 0;
     public static final int TRUNK_HEIGHT_END = 600;
-    public static final int MAX_BRANCH_HEIGHT_END = 750;
-    public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = 300;
-    public static final int MAX_BRANCH_HEIGHT_INCREASE = 100;
-    public static final int NUMBER_OF_BRANCHES = 15;
+    public static final int TRUNK_HEIGHT_WITHOUT_BRANCHES = 100;
+    public static final int NUMBER_OF_BRANCHES = 5;
     public static final Random RANDOM = new Random();
-    public static final int MIN_BRANCH_LENGTH = 10;
-    private int branchStartHeight;
-
+    private Integer lastDirection = 1;
 
     private int getBranchDirection() {
-        return RANDOM.nextBoolean() ? 1 : -1;
+        lastDirection = this.lastDirection * - 1;
+        return lastDirection;
     }
 
     public Tree generateTree() {
         Tree tree = new Tree();
         tree.getTrunk().setTrunkLine(new Line(TRUNK_X, TRUNK_HEIGHT_START, TRUNK_X, TRUNK_HEIGHT_END));
         List<Branch> branches = Lists.newArrayList();
-        for (int i = 0; i < 3; i++) {
-            Branch firstLevelBranch = new Branch();
+
+        // TRUNK
+        Line trunkLine = tree.getTrunk().getTrunkLine();
+
+        // get angle between parent and branch
+        double alpha = getRandomFromInterval(20, 25);
+
+        List<Pair<Point, Point>> trunkBranchPoints = getTrunkBranchPoints(new Point(trunkLine.getXStart(), trunkLine.getYStart()),
+                new Point(trunkLine.getXEnd(), trunkLine.getYEnd()), alpha);
+
+        for (Pair<Point, Point> trunkBranchPoint : trunkBranchPoints) {
+            Branch branchOfTrunk = new Branch();
             List<Line> branchSegments = Lists.newArrayList();
-            Line trunkLine = tree.getTrunk().getTrunkLine();
+            branchOfTrunk.setAngleToParentBranch(alpha);
+            branchSegments.add(new Line(trunkBranchPoint.getKey().getX(), trunkBranchPoint.getKey().getY(),
+                    trunkBranchPoint.getValue().getX(), trunkBranchPoint.getValue().getY()));
+            branchOfTrunk.setBranchSegments(branchSegments);
 
-            // get angle between parent and branch
-            double alpha = getRandomFromInterval(30, 70);
-            firstLevelBranch.setAngleToParentBranch(alpha);
-
-            Pair<Point, Point> pointsOfNewBranch = getPointsOfNewBranch(
-                    new Point(trunkLine.getXStart(), trunkLine.getYStart()),
-                    new Point(trunkLine.getXEnd(), trunkLine.getYEnd()), alpha);
-            branchSegments.add(new Line(pointsOfNewBranch.getKey().getX(), pointsOfNewBranch.getKey().getY(),
-                    pointsOfNewBranch.getValue().getX(), pointsOfNewBranch.getValue().getY()));
-            firstLevelBranch.setBranchSegments(branchSegments);
             for (int j = 0; j < 2; j++) {
-                Line parentBranchLine = firstLevelBranch.getBranchSegments().get(0);
+                Line parentBranchLine = branchSegments.get(0);
 
                 // get angle between parent and branch
-                double childAlpha = getRandomFromInterval(30, 70);
-                childAlpha += firstLevelBranch.getAngleToParentBranch();
-                firstLevelBranch.setAngleToParentBranch(childAlpha);
+                double childAlpha = getRandomFromInterval(30, 40);
+                childAlpha += branchOfTrunk.getAngleToParentBranch();
+                branchOfTrunk.setAngleToParentBranch(childAlpha);
                 Pair<Point, Point> pointsOfNewBranch2 = getPointsOfNewBranch(
                         new Point(parentBranchLine.getXStart(), parentBranchLine.getYStart()),
                         new Point(parentBranchLine.getXEnd(), parentBranchLine.getYEnd()), childAlpha);
 
-                addBranchToParentBranch(firstLevelBranch, pointsOfNewBranch2);
+                System.out.println("pointsOfNewBranch2: " + pointsOfNewBranch2.getKey());
+                System.out.println("pointsOfNewBranch2: " + pointsOfNewBranch2.getValue());
+                addBranchToParentBranch(branchOfTrunk, pointsOfNewBranch2);
+
+                for (int g = 0; g < 2; g++) {
+                    Line parentBranchLine2 = branchOfTrunk.getBranches().get(j).getBranchSegments().get(0);
+
+                    // get angle between parent and branch
+                    double childAlpha2 = getRandomFromInterval(30, 40);
+                    childAlpha += branchOfTrunk.getAngleToParentBranch();
+                    branchOfTrunk.setAngleToParentBranch(childAlpha);
+                    Pair<Point, Point> pointsOfNewBranch22 = getPointsOfNewBranch(
+                            new Point(parentBranchLine2.getXStart(), parentBranchLine2.getYStart()),
+                            new Point(parentBranchLine2.getXEnd(), parentBranchLine2.getYEnd()), childAlpha2);
+
+                    System.out.println("pointsOfNewBranch3: " + pointsOfNewBranch22.getKey());
+                    System.out.println("pointsOfNewBranch3: " + pointsOfNewBranch22.getValue());
+                    addBranchToParentBranch(branchOfTrunk.getBranches().get(j), pointsOfNewBranch22);
+                }
             }
-            branches.add(firstLevelBranch);
+
+            branches.add(branchOfTrunk);
         }
         tree.getTrunk().setBranches(branches);
 
         return tree;
+    }
+
+    private List<Pair<Point, Point>> getTrunkBranchPoints(Point startParentBranch, Point endParentBranch, double alpha) {
+        List<Double> yPoints = Lists.newArrayList();
+        List<Pair<Point, Point>> trunkBranchPoints = Lists.newArrayList();
+        yPoints.add(TRUNK_HEIGHT_WITHOUT_BRANCHES + 20.0);
+        for (int i = 0; i < NUMBER_OF_BRANCHES; i++) {
+            Double precedingY = yPoints.get(yPoints.size() - 1);
+            double nextYStart = getRandomFromInterval(precedingY + 50, precedingY + 100);
+            yPoints.add(nextYStart);
+            System.out.println("nextYStart: " + nextYStart);
+        }
+        for (Double yPoint : yPoints) {
+            int branchLength = getBranchLength(new Line(startParentBranch, endParentBranch).getLength());
+            Point endPointOfBranch = getEndPointOfBranch(branchLength, alpha, true);
+            endPointOfBranch.setX(endPointOfBranch.getX() + TRUNK_X);
+            endPointOfBranch.setY(endPointOfBranch.getY() + yPoint);
+            trunkBranchPoints.add(new Pair<Point, Point>(new Point(TRUNK_X, yPoint), endPointOfBranch));
+        }
+        return trunkBranchPoints;
     }
 
     private void addBranchToParentBranch(Branch parentBranch, Pair<Point, Point> pointsOfNewBranch2) {
@@ -89,8 +128,7 @@ public class TreeGenerationService2 implements TreeGenerator {
         Point startPoint = getPointOnLine(startParentBranch, endParentBranch, xStartOfNewBranch);
 
         int branchLength = getBranchLength(new Line(startParentBranch, endParentBranch).getLength());
-        Point endPointOfBranch = getEndPointOfBranch(branchLength,
-                alpha);
+        Point endPointOfBranch = getEndPointOfBranch(branchLength, alpha, false);
 
         endPointOfBranch.setX(endPointOfBranch.getX() + startPoint.getX());
         endPointOfBranch.setY(endPointOfBranch.getY() + startPoint.getY());
@@ -113,14 +151,18 @@ public class TreeGenerationService2 implements TreeGenerator {
         if (distance == 0) {
             return startParentBranchX;
         }
-        return getRandomFromInterval(startParentBranchX + 0.3 * distance, endParentBranchX);
+        double xStartOfNewBranch = getRandomFromInterval(startParentBranchX + 0.3 * distance, endParentBranchX);
+        return xStartOfNewBranch;
     }
 
 
-    public Point getEndPointOfBranch(int length, double alpha){
+    public Point getEndPointOfBranch(int length, double alpha, boolean isTrunk){
         double alphaInRadians = Math.toRadians(alpha);
         double x = Math.sin(alphaInRadians) * length;
         double y = Math.cos(alphaInRadians) * length;
+        if (isTrunk && getBranchDirection() == -1) {
+            x = x - TRUNK_X;
+        }
         return new Point(x, y);
     }
 
@@ -129,6 +171,9 @@ public class TreeGenerationService2 implements TreeGenerator {
             double y = RANDOM.nextDouble() * end.getY();
             if (y < TRUNK_HEIGHT_WITHOUT_BRANCHES) {
                 y = y + TRUNK_HEIGHT_WITHOUT_BRANCHES;
+            }
+            if (y > TRUNK_HEIGHT_END) {
+                y = TRUNK_HEIGHT_END - 20;
             }
             Point point = new Point(start.getX(), y);
             return point;

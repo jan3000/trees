@@ -110,6 +110,7 @@ public class Main extends Application {
             for (de.treestudio.domain.Line line : branch.getBranchSegments()) {
                 pane.getChildren().add(drawLine(line));
                 pane.getChildren().add(drawLine(branch.getBranches().get(0).getBranchSegments().get(0)));
+                pane.getChildren().add(drawLine(branch.getBranches().get(0).getBranches().get(0).getBranchSegments().get(0)));
             }
         }
     }
